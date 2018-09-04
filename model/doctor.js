@@ -18,6 +18,7 @@ var doctorSchema=new Schema({
 	},
 	specilization:{
 		type:String
+		
 	},
 	address:{
 		street:{

@@ -3,9 +3,11 @@ var Schema=mongoose.Schema;
 var doctorAppointmentSchema=new Schema({
 	
 	doctorId:{
+		ref:"Doctor",
 		type:String
 	},
 	patientId:{
+		ref:"Patient",
 		type:String
 	},
 	date:{

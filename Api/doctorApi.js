@@ -164,3 +164,4 @@ module.exports.getDoctorDetails= function(req,res){
 	})
 	}
 	}  
+

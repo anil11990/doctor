@@ -2,7 +2,7 @@ var Patient=require('../model/patient');
 var Doctor=require('../model/doctor');
 var Appointment=require('../model/doctorAppointment');
 
-//-----doctor match by patient-------------//
+//-----doctor match by patient deceases-------------//
 
 // module.exports.searchDoctor=function(req,res){
 // 			Patient.findById({"_id":req.body._id},function(err,success){
@@ -70,5 +70,17 @@ module.exports.createAppointment=function(req,res){
 		});
 	}
 
-
-	
+//populate by appointmrntDate
+//only show doctor and patient name use name key or select:"name"
+module.exports.searchByAppointmentDate=function(req,res){
+	Appointment.find({"appointmentDate":req.body.appointmentDate}).populate({path:"doctorId patientId",select:"name"}).exec(function(err,success){
+		if(err){
+			res.send(err)  
+			}
+			else{
+				res.send(success)
+				}
+			})	
+		}
+			
+			
