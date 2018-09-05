@@ -1,6 +1,10 @@
 var Doctor=require('../model/doctor')
+var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
+var generateHash1 = require("../middleware/bcrypt");
+var comparePassword=require("../middleware/bcrypt");
 module.exports.signup=function(req,res){
+
 	if( ! req.body.hasOwnProperty("emailId")){
 		res.send("emailId is required")
 	}
@@ -19,6 +23,12 @@ module.exports.signup=function(req,res){
 			console.log("already registered")
 			res.send(success);
 		}
+		else{
+			//generate hash 
+				generateHash1.generateHash(req.body.password,function(err,hash){
+					console.log(err,hash)
+				req.body.password = hash;
+				//save newUser object to database
 				var saveData=new Doctor(req.body);
 				saveData.save(function(err,success){
 				if(err){
@@ -31,8 +41,12 @@ module.exports.signup=function(req,res){
 						}
 					})
 				})
-			 }
-		}
+		       }
+		     })
+				
+			  }
+		 }
+
 		
 
 	module.exports.login = function (req,res) {
@@ -50,8 +64,8 @@ module.exports.signup=function(req,res){
 		}
 		else if(success){
 			console.log("login successfull");
-			console.log(success)
-
+			// console.log(success);
+		
 			//genarate token//
 
 			var token = jwt.sign(success.toJSON(), 'vfderb');
@@ -63,7 +77,28 @@ module.exports.signup=function(req,res){
 		}
 	})
 	}
-	}	
+}
+
+// module.exports.login=function(req, res) {
+
+//   Doctor.findOne({ emailId: req.body.emailId }, function (err, user) {
+//     if (err) return res.status(500).send('Error on the server.');
+//     if (!user) return res.status(404).send('No user found.');
+
+//     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+//     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
+
+//     var token = jwt.sign({ id: user._id }, config.secret, {
+//       expiresIn: 86400 // expires in 24 hours
+//     });
+
+//     res.status(200).send({ auth: true, token: token });
+//   });
+
+// };
+		
+
+
 
 	module.exports.changePassword=function(req,res){
 	if(!req.body.hasOwnProperty("emailId")){
@@ -124,6 +159,7 @@ module.exports.signup=function(req,res){
 	}
     }	
 
+//search doctor by id and update gender and name
 
    module.exports.findByIdAndUpdate=function(req,res){
 	if(!req.body.hasOwnProperty("_id")){

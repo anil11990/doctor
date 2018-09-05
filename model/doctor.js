@@ -2,36 +2,46 @@ var mongoose=require("mongoose");
 var Schema=mongoose.Schema;
 var doctorSchema=new Schema({
 	name:{
-		type:String
+		type:String,
+		required: true
 	},
 	gender:{
-		type:String
+		type:String,
+		required: true
 	},
 	phoneNumber:{
-		type:Number
+		type:Number,
+		required: true
 	},
 	emailId:{
-		type:String
+		type:String,
+		required: true,
+		unique:true
 	},
 	password:{
-		type:String
+		type:String,
+		required:true
 	},
 	specilization:{
-		type:String
-		
+		type:String,
+		required:true	
 	},
 	address:{
 		street:{
-			type:String
+			type:String,
+			required:true
 		},
 		city:{
-			type:String
+			type:String,
+			required:true
 		},
 		state:{
-			type:String
+			type:String,
+			required:true
 		},
 		pinCode:{
-			type:Number
+			type:Number,
+			required:true
 		},
 	}
 	})

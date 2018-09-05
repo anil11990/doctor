@@ -54,7 +54,7 @@ module.exports.searchDoctor=function(req,res){
 		}
 
  
-// save appointment using doctorId and patient id
+// save appointment using doctorId and patientid
 
 module.exports.createAppointment=function(req,res){
 	var saveAppointment=new Appointment(req.body);
@@ -70,7 +70,7 @@ module.exports.createAppointment=function(req,res){
 		});
 	}
 
-//populate by appointmrntDate
+//populate(multi populate) by appointmrntDate
 //only show doctor and patient name use name key or select:"name"
 module.exports.searchByAppointmentDate=function(req,res){
 	Appointment.find({"appointmentDate":req.body.appointmentDate}).populate({path:"doctorId patientId",select:"name"}).exec(function(err,success){
