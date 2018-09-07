@@ -2,7 +2,6 @@ var Doctor=require('../model/doctor')
 var bcrypt = require('bcryptjs');
 var jwt = require('jsonwebtoken');
 var generateHash1 = require("../middleware/bcrypt");
-var comparePassword=require("../middleware/bcrypt");
 module.exports.signup=function(req,res){
 
 	if( ! req.body.hasOwnProperty("emailId")){
@@ -57,19 +56,26 @@ module.exports.signup=function(req,res){
 		res.send("password is required")
 	}
 	else{
-		 Doctor.findOne({"emailId":req.body.emailId,"password":req.body.password},function(err,success){
+		 Doctor.findOne({"emailId":req.body.emailId},function(err,success){
         if(err){
 			console.log("err")
 			res.send(err);
 		}
 		else if(success){
-			console.log("login successfull");
-			// console.log(success);
-		
-			//genarate token//
+			generateHash1.comparePassword(req.body.password,success.password,function(err,hash){
+				if(err){
+					res.send("err")
+				}
+				else if(hash){
 
-			var token = jwt.sign(success.toJSON(), 'vfderb');
+			// //genarate token//	
+				var token = jwt.sign(success.toJSON(), 'vfderb');
 			res.send({"success":success,"token":token});
+				}
+				else{
+					res.send("password is incorrect");
+				}
+			})	
 		}
 		else{
 			console.log("Register first")
@@ -79,27 +85,7 @@ module.exports.signup=function(req,res){
 	}
 }
 
-// module.exports.login=function(req, res) {
-
-//   Doctor.findOne({ emailId: req.body.emailId }, function (err, user) {
-//     if (err) return res.status(500).send('Error on the server.');
-//     if (!user) return res.status(404).send('No user found.');
-
-//     var passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
-//     if (!passwordIsValid) return res.status(401).send({ auth: false, token: null });
-
-//     var token = jwt.sign({ id: user._id }, config.secret, {
-//       expiresIn: 86400 // expires in 24 hours
-//     });
-
-//     res.status(200).send({ auth: true, token: token });
-//   });
-
-// };
 		
-
-
-
 	module.exports.changePassword=function(req,res){
 	if(!req.body.hasOwnProperty("emailId")){
 		res.send("emailId is required");
