@@ -16,14 +16,7 @@ module.exports.comparePassword=function(password,hashPassword,callback){
     else callback(null,hash);
   });
 }
-// module.exports.comparePassword=function(password,hashPassword,callback){
-// bcrypt.compare("password", hash, function(err, hash) {
-//     callback(null,hash)
-// });
-// bcrypt.compare("!password", hash, function(err, hash) {
-//     callback(err,null)
-// });
-// }
+
 
 
 

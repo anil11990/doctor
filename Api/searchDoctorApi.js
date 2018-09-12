@@ -14,8 +14,8 @@ var Appointment=require('../model/doctorAppointment');
 // 				}
 // 				else{
 // 					// console.log(success);
-// 					// var deceases=success.deceases
-// 					// Doctor.find({"specilizatiom" : { $regex:deceases,$options:'i' }}
+// 					// var diceases=success.diceases
+// 					// Doctor.find({"specilization" : { $regex:deceases,$options:'i' }}
 // 				var state=success.address.state;
 // 				Doctor.find({"address.state" : { $regex:state,$options:'i' }},function(err,success){
 // 						if(err){
@@ -83,4 +83,59 @@ module.exports.searchByAppointmentDate=function(req,res){
 			})	
 		}
 			
-			
+
+//find doctor list by patientId	
+//doctor specilization match with patient diceases
+module.exports.doctorIdList=function(req,res){
+			Patient.findById({"_id":req.body._id},function(err,success){
+				if(err){
+					res.send(err);
+				}
+				else if(!success){ 
+					res.send({"msg":"id not found"})
+				}
+				else{
+					// console.log(success);
+					
+					var diceases=success.dicease
+					// console.log(diceases);
+					Doctor.find({"specilization" : { $regex:diceases,$options:'i' }},function(err,success){
+
+						if(err){
+						res.send(err)  
+						}
+						else{
+							console.log(success);
+	//push doctorid in an array[] from array object[{},{}]
+					   var arr=[];
+						for (var i = 0; i < success.length; i++) {
+ 						var entry = success[i];
+						arr.push(entry._id);
+						}
+						// console.log(arr);
+						var obj ={
+							patientId:req.body._id,
+							doctorId:arr,
+							date:req.body.date,
+							appointmentDate:req.body.date,
+							duration :req.body.duration
+						}					
+						var saveAppointment=new Appointment(obj);
+									saveAppointment.save(function(err,success){
+								if(err){
+									console.log("err")
+									res.send(err);
+								}
+								else {
+									console.log("saveAppointment")
+									res.send(success);
+								}
+							});
+
+						}
+					})	
+				}
+			})
+		}		
+
+

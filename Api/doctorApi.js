@@ -85,7 +85,7 @@ module.exports.signup=function(req,res){
 	}
 }
 
-		
+//change password 		
 	module.exports.changePassword=function(req,res){
 	if(!req.body.hasOwnProperty("emailId")){
 		res.send("emailId is required");
@@ -102,6 +102,7 @@ module.exports.signup=function(req,res){
 			res.send(err)
 		}
 		else if(success){
+			//check success password with req password
 			if(success.password==req.body.password){
 				Doctor.findOneAndUpdate({"emailId":req.body.emailId},{$set:{"password":req.body.newpassword}},function(err,success){
 					if(err){
@@ -125,6 +126,7 @@ module.exports.signup=function(req,res){
 	}
 
 
+//get doctorlist by specilization and address
 	module.exports.getDoctorlist=function(req,res){
     
     if(!req.body.hasOwnProperty("specilization")){
@@ -143,10 +145,10 @@ module.exports.signup=function(req,res){
 		}
 	})
 	}
-    }	
+    }
+
 
 //search doctor by id and update gender and name
-
    module.exports.findByIdAndUpdate=function(req,res){
 	if(!req.body.hasOwnProperty("_id")){
 		res.send("_id required");
@@ -167,7 +169,7 @@ module.exports.signup=function(req,res){
 	}
 }
 
-
+// doctor detail by name and specilazation
 module.exports.getDoctorDetails= function(req,res){
 	if(!req.body.hasOwnProperty("name")){
       res.send("name is required")

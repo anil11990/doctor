@@ -1,6 +1,9 @@
 var Patient=require('../model/patient')
 var jwt = require('jsonwebtoken');
+
+// register patient details with validation age name and gender
 module.exports.register = function (req,res) {
+	// hasownproperty check the request which comming from rest client
 	if( ! req.body.hasOwnProperty("name")){
 		res.send("name is required")
 	}
@@ -12,6 +15,7 @@ module.exports.register = function (req,res) {
 	}
 	
 	else {
+//find patient details from req.body
 		Patient.findOne({"name":req.body.name ,"age":req.body.age,"gender":req.body.gender},function(err,success){
         if(err){
 			res.send(err);
@@ -21,6 +25,7 @@ module.exports.register = function (req,res) {
 			res.send(success);
 		}
 		else{
+// save patient if not available in db
 		var saveData=new Patient(req.body);
 		saveData.save(function(err,success){
 		if(err){
@@ -28,16 +33,19 @@ module.exports.register = function (req,res) {
 		res.send(err);
 		}
 		else {
+//genarate token
+		var token = jwt.sign(success.toJSON(), 'asdfhj');
+		res.send({"success":success,"token":token});	
 		console.log("saveData")
 		res.send(success);
-							   }
-						    })
+				   		}	
+					})
 			  	}
-			  }) 
-		  }
+		  	}) 
+	    	}
+      		}
 
-	}
-
+//patient login through emailid and password witch are register
 module.exports.login = function (req,res) {
 	if(!req.body.hasOwnProperty("emailId")){
 		res.send("emailId is required")	
@@ -55,8 +63,7 @@ module.exports.login = function (req,res) {
 			console.log("login successfull");
 			console.log(success)
 
-			//genarate token//
-
+	//if login is succesfull then genarate token//
 			var token = jwt.sign(success.toJSON(), 'asdfhj');
 			res.send({"success":success,"token":token});
 		}
@@ -69,7 +76,7 @@ module.exports.login = function (req,res) {
 	}
 	
 
-
+//get patient details by _id
 module.exports.getdetails= function(req,res){
 	if(!req.body.hasOwnProperty("_id")){
       res.send("id is required")
@@ -129,6 +136,7 @@ module.exports.changePassword=function(req,res){
 	}
 
 
+//pagging patient list by decease($option:i ,use for casecensitive) 
 module.exports.paginate=function(req,res){
 	Patient.paginate({"dicease":{$regex:req.body.dicease,$options:'i'}},{page:1,limit:2},function(err,success){  
         if(err){  
@@ -142,7 +150,7 @@ module.exports.paginate=function(req,res){
     });
 }	
 	
-
+// patient list by diecease
 module.exports.getPatientList=function(req,res){
 	if(!req.body.hasOwnProperty("dicease")){
 		res.send("dicease is required");

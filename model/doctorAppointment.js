@@ -2,10 +2,10 @@ var mongoose=require("mongoose");
 var Schema=mongoose.Schema;
 var doctorAppointmentSchema=new Schema({
 	
-	doctorId:{
+	doctorId:[{
 		ref:"Doctor",
 		type:String
-	},
+	}],
 	patientId:{
 		ref:"Patient",
 		type:String
